@@ -1,0 +1,60 @@
+import random
+
+class Jogador:
+    def __init__(self, nome, nivel_dificuldade):
+        self.nome = nome
+        self.nivel_dificuldade = nivel_dificuldade
+        self.pontuacao = 0
+
+    def __str__(self):
+        return f"Jogador: {self.nome}, Nível de Dificuldade: {self.nivel_dificuldade}, Pontuação: {self.pontuacao}"
+
+def criar_charadas():
+    charadas = {
+        "Qual é o animal que anda com as patas?": "elefante",
+        "O que é que cai em pé e corre deitado?": "chuva",
+        "O que tem asas mas não voa?": "mesa",
+        "O que é que quanto mais se tira mais aumenta?": "buraco",
+        "O que é que tem pescoço mas não tem cabeça?": "garrafa",
+        "O que é que é verde e fica vermelho?": "limão",
+        "O que é que é redondo como um prato e tem estrelas dentro?": "abacaxi",
+        "O que é que quanto mais seca, mais molhada fica?": "toalha",
+        "O que é que é preto e branco e é redondo?": "panda",
+        "O que é que é maior quando novo e menor quando velho?": "selo"
+    }
+    return charadas
+
+def executar_charada(charadas, jogador):
+    charada = random.choice(list(charadas.keys()))
+    resposta = input(f"\nCharada: {charada}\nSua resposta: ").lower().strip()
+
+    if resposta == charadas[charada]:
+        print("Parabéns! Você acertou a charada!")
+        jogador.pontuacao += 10
+    else:
+        print("Resposta incorreta. Continue tentando!")
+
+# Função principal
+def main():
+    print("Bem-vindo ao Vox Defensor!")
+    nome = input("Digite seu nome: ")
+    nivel_dificuldade = int(input("Escolha o nível de dificuldade (1, 2 ou 3): "))
+
+    if nivel_dificuldade not in [1, 2, 3]:
+        print("Nível de dificuldade inválido. O jogo será encerrado.")
+    else:
+        charadas = criar_charadas()
+        jogador = Jogador(nome, nivel_dificuldade)
+        print(f"\n{str(jogador)}")
+        print("Vox Defensor está pronto para a ação!")
+
+        while True:
+            executar_charada(charadas, jogador)
+            continuar = input("\nDeseja enfrentar outra charada? (s/n): ").strip().lower()
+            if continuar != 's':
+                print(f"Obrigado por jogar, {jogador.nome}! Sua pontuação final é {jogador.pontuacao} pontos. Até a próxima!")
+                break
+
+# Iniciar o jogo
+if __name__ == "__main__":
+    main()
