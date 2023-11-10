@@ -1,0 +1,84 @@
+import pygame
+import sys
+import random
+
+# Inicialização do Pygame
+pygame.init()
+
+# Definição de constantes
+WIDTH, HEIGHT = 800, 600
+SQUARE_SIZE = 20
+SULTANA_SIZE = SQUARE_SIZE
+TRIDENT_SIZE = SQUARE_SIZE
+
+# Definição de cores
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+
+# Função principal do jogo
+def game():
+    # Inicialização da janela do Pygame
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Sultana's Adventure")
+
+    # Posição inicial da Sultana
+    sultana_x = WIDTH // 2
+    sultana_y = HEIGHT // 2
+
+    # Posição inicial do Trident
+    trident_x = random.randint(0, WIDTH - TRIDENT_SIZE)
+    trident_y = random.randint(0, HEIGHT - TRIDENT_SIZE)
+
+    # Velocidade da Sultana
+    speed = SQUARE_SIZE
+
+    # Lista que representa o corpo da Sultana
+    sultana_body = [(sultana_x, sultana_y)]
+
+    # Loop principal
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        sultana_x += (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * speed
+        sultana_y += (keys[pygame.K_DOWN] - keys[pygame.K_UP]) * speed
+
+        # Verifica se a Sultana pegou o Trident
+        if (
+            sultana_x < trident_x + TRIDENT_SIZE
+            and sultana_x + SULTANA_SIZE > trident_x
+            and sultana_y < trident_y + TRIDENT_SIZE
+            and sultana_y + SULTANA_SIZE > trident_y
+        ):
+            print("Parabéns! Sultana pegou o tridente!")
+            trident_x = random.randint(0, WIDTH - TRIDENT_SIZE)
+            trident_y = random.randint(0, HEIGHT - TRIDENT_SIZE)
+            # Adiciona uma parte ao corpo da Sultana
+            sultana_body.append((0, 0))
+
+        # Atualiza o corpo da Sultana
+        for i in range(len(sultana_body) - 1, 0, -1):
+            sultana_body[i] = sultana_body[i - 1]
+
+        # Atualiza a cabeça da Sultana
+        sultana_body[0] = (sultana_x, sultana_y)
+
+        # Limpa a tela
+        screen.fill(WHITE)
+
+        # Desenha a Sultana
+        for segment in sultana_body:
+            pygame.draw.rect(screen, RED, (segment[0], segment[1], SULTANA_SIZE, SULTANA_SIZE))
+
+        # Desenha o Trident
+        pygame.draw.rect(screen, RED, (trident_x, trident_y, TRIDENT_SIZE, TRIDENT_SIZE))
+
+        # Atualiza a tela
+        pygame.display.flip()
+        pygame.time.Clock().tick(10)
+
+if __name__ == "__main__":
+    game()
